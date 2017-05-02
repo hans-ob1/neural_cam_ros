@@ -1,0 +1,25 @@
+<package>
+  <description brief="darknet_yolo2_tracking">
+
+     darknet_yolo2_tracking
+
+  </description>
+  <author>Caroline Pantofaru</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pedestrian_detector_HOG</url>
+
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="rosconsole"/>
+  <depend package="rospy"/>
+  <!--depend package="cv_bridge"/-->
+  <!--depend package="stereo_utils"/-->
+  <depend package="stereo_msgs"/>
+  <depend package="sensor_msgs"/>
+  <depend package="laser_geometry"/>
+  <!--depend package="image_transport"/-->
+  <depend package="tf"/>
+
+</package>

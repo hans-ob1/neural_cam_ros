@@ -1,0 +1,10 @@
+#info: topleft_, bottomright_ refering to image
+#info: planar_ is plane position information
+
+
+string name
+geometry_msgs/Point32 planar
+geometry_msgs/Point32 topleft
+geometry_msgs/Point32 bottomright
+
+
