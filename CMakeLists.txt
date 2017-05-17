@@ -3,7 +3,7 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
 rosbuild_init()
 
-find_package(CUDA 8.0 REQUIRED)
+find_package(CUDA 7.5 REQUIRED)
 find_package(OpenCV 3.1 REQUIRED)
 
 #rosbuild_genmsg()

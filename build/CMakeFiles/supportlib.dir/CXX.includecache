@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/hxhx/neural-cam-ros/src/supportfunc.cpp
+supportfunc.hpp
+/home/hxhx/neural-cam-ros/src/supportfunc.hpp
+
+/home/hxhx/neural-cam-ros/src/supportfunc.hpp
+opencv2/videoio/videoio.hpp
+-
+opencv2/imgcodecs.hpp
+-
+opencv2/highgui/highgui.hpp
+-
+opencv2/objdetect/objdetect.hpp
+-
+string
+-
+iostream
+-
+
