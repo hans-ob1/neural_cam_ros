@@ -1,5 +1,5 @@
 #neural-cam-ros
-neural-cam-ros is basically an extension of neural-cam except wrapped with ros. The backend framework used is darknet developed by Joseph Redmon. This version is compiled with cmake. Feel free to modify to your own use. Pre-trained VGG, coco weights are in the weights folder
+neural-cam-ros is basically an extension of neural-cam except wrapped with ROS. The backend framework used is darknet developed by Joseph Redmon. This moduele is designed to quickly test the state-of-the-art obstacle detection for moving robots. No training option is available in this module. You can browse through the weights folder for pre-trained weights such as VGG/Coco
 
 Usage Details:
 - rosmake
