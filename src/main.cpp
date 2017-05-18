@@ -239,33 +239,18 @@ int main(int argc, char* argv[]){
   ros::init(argc, argv, "talker");
   ros::NodeHandle n;
 
-   if(argc < 2){
-      cerr <<"Usage detail: "<< argv[0] << " OPTION"<< endl;
-      return 0;
-   }
+  if(!init_camera_param(0))
+      return -1;
 
-   if(strcmp(argv[1], "train") == 0){        //training
+  init_network_param(0);       //initialize the CNN parameters from cfg files
 
-      init_network_param(1);        
-      execute_detector_training();
+  for(;;){  //process and show everyframe
 
-   }else if (strcmp(argv[1], "eval") == 0){  //evaluation using camera
+    process_camera_frame(true);
 
-      if(!init_camera_param(0))
-          return -1;
-
-       init_network_param(0);       //initialize the CNN parameters from cfg files
-
-       for(;;){  //process and show everyframe
-          process_camera_frame(true);
-          if(waitKey (1) >= 0)  //break upon anykey
-             break;
-       }
-
-   }else{
-      cerr << "Invalid options, either train or eval" << endl;
-      return 0;
-   }
+    if(waitKey (1) >= 0)  //break upon anykey
+        break;
+  }
 
    return 0;
 }
