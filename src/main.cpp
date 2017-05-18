@@ -1,31 +1,26 @@
 #include <iostream>
 #include <stdlib.h>     /* malloc, calloc, realloc, free */
+#include <ctime>
+#include <fstream>
 
 #include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat)
 #include <opencv2/videoio/videoio.hpp>  // Video write
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "supportfunc.hpp"
-#include <fstream>
-//#include <neural-cam-ros/Object.h>
-//#include <neural-cam-ros/ObjectStack.h>
+
+#include "supportfunc.hpp"      //custom functions
+
+#include <neural_cam_ros/obstacle.h>
+#include <neural_cam_ros/obstacleStack.h>
 //#include <thread>
 
-#include <ctime>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include <sstream>
 #include <geometry_msgs/Point32.h>
 #include <tf/transform_listener.h>
 #include <laser_geometry/laser_geometry.h>
-
-using namespace std;
-using namespace cv;
-
-extern "C" {
-#include "detector.h"
-}
 
 using namespace std;
 using namespace cv;
@@ -52,11 +47,13 @@ void convert_frame(IplImage* input){
 // draw boxes
 extern "C" void label_func(int tl_x, int tl_y, int br_x, int br_y, char *names){
 
+   //TODO: Make this part (detection interests) more tidy, e.g load from cfg files
+
    string str(names);
    Scalar color;
    bool keep = false;
 
-   if(str == "person"){  //index 01
+   if(str == "pedestrian"){  //index 01
      color = Scalar(255, 0, 0);  //coral color
      keep = true;
    }else if (str == "bike"){ //index 02
@@ -128,7 +125,7 @@ extern "C" image load_stream_cv()
 }
 
 
-// initialization of network
+// initialization of deep learning network
 bool init_network_param(bool train){
 
      char *datacfg;
@@ -198,7 +195,7 @@ bool init_network_param(bool train){
 
      //initialize c api
      if(train)
-  setup_detector_training(datacfg, cfg, weights);
+  		setup_detector_training(datacfg, cfg, weights);
      else{
         if(!weights){
      cout << "Error: No weights file specified in setup.cfg! Abort" <<endl;
@@ -225,30 +222,66 @@ bool init_camera_param(int cam_id){
 }
 
 // run this in a loop
-void process_camera_frame(bool display){
+vector<detectedBox> process_camera_frame(bool display){
      camera_detector();      //draw frame from img_cpp;
-     display_frame_cv(display);
+
+     vector<detectedBox> curr_captured;
+     curr_captured = display_frame_cv(display);
+
+     return curr_captured;
 }
 
-//---------------------------->
+//-------------------------------------------------------->
 //<---------------------- main ---------------------------->
-//---------------------------->
+//-------------------------------------------------------->
 
 int main(int argc, char* argv[]){
 
   ros::init(argc, argv, "talker");
   ros::NodeHandle n;
 
+  ros::Publisher obstacles_pub = n.advertise<neural_cam_ros::obstacleStack>("obstacles", 1000);
+
+  /* will read setup.cfg file for configuration details */
+
   if(!init_camera_param(0))
       return -1;
 
   init_network_param(0);       //initialize the CNN parameters from cfg files
 
-  for(;;){  //process and show everyframe
+  for(;;){  				   //process and show everyframe
 
-    process_camera_frame(true);
+  	 //declare of ROS Parameters
+  	neural_cam_ros::obstacle d_data;
+  	neural_cam_ros::obstacleStack d_msg;
 
-    if(waitKey (1) >= 0)  //break upon anykey
+    vector<detectedBox> curr_preprocessed;
+
+    curr_preprocessed = process_camera_frame(true); //true if want to display detection, false for no display
+
+    //geometry_msgs::Point geo_tr;
+    //geometry_msgs::Point geo_br;
+
+    for(int i = 0; i < curr_preprocessed.size(); i++){
+
+    	d_data.topleft.x = curr_preprocessed[i].topLeft.x;
+    	d_data.topleft.y = curr_preprocessed[i].topLeft.y;
+
+    	d_data.bottomright.x = curr_preprocessed[i].bottomRight.x;
+    	d_data.bottomright.y = curr_preprocessed[i].bottomRight.y;
+
+    	d_data.name = curr_preprocessed[i].name;
+
+    	d_msg.stack_obstacles.push_back(d_data);
+    }
+
+    d_msg.stack_len = curr_preprocessed.size();
+    d_msg.stack_name = "test camera";
+
+
+    obstacles_pub.publish(d_msg);
+
+    if(waitKey (1) >= 0)  	   //break upon anykey
         break;
   }
 
