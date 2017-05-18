@@ -1,3 +1,11 @@
+/*
+
+YOLO implementation with ROS
+Modify here for your needs
+
+*/
+
+
 #include <iostream>
 #include <stdlib.h>     /* malloc, calloc, realloc, free */
 #include <ctime>
@@ -126,7 +134,7 @@ extern "C" image load_stream_cv()
 
 
 // initialization of deep learning network
-bool init_network_param(bool train){
+bool init_network_param(){
 
      char *datacfg;
      char *cfg;
@@ -194,14 +202,8 @@ bool init_network_param(bool train){
      }
 
      //initialize c api
-     if(train)
-  		setup_detector_training(datacfg, cfg, weights);
-     else{
-        if(!weights){
-     cout << "Error: No weights file specified in setup.cfg! Abort" <<endl;
-        }else    
-           setup_proceedure(datacfg, cfg, weights, thresh_desired);
-     }
+ 
+     setup_proceedure(datacfg, cfg, weights, thresh_desired);
 
      delete [] datacfg;
      delete [] cfg;
@@ -216,7 +218,7 @@ bool init_camera_param(int cam_id){
       cap_un.open(cam_id);
       if(!cap_un.isOpened()){
          cout << "camera stream failed to open!" <<endl;
-   return false;
+   		return false;
       }else
          return true;
 }
@@ -247,20 +249,17 @@ int main(int argc, char* argv[]){
   if(!init_camera_param(0))
       return -1;
 
-  init_network_param(0);       //initialize the CNN parameters from cfg files
+  init_network_param();       //initialize the CNN parameters from cfg files
 
   for(;;){  				   //process and show everyframe
 
-  	 //declare of ROS Parameters
+  	//declare of ROS Parameters (refresh every cycle)
   	neural_cam_ros::obstacle d_data;
   	neural_cam_ros::obstacleStack d_msg;
 
     vector<detectedBox> curr_preprocessed;
 
     curr_preprocessed = process_camera_frame(true); //true if want to display detection, false for no display
-
-    //geometry_msgs::Point geo_tr;
-    //geometry_msgs::Point geo_br;
 
     for(int i = 0; i < curr_preprocessed.size(); i++){
 
@@ -276,10 +275,9 @@ int main(int argc, char* argv[]){
     }
 
     d_msg.stack_len = curr_preprocessed.size();
-    d_msg.stack_name = "test camera";
+    d_msg.stack_name = "test camera";      // check camera header
 
-
-    obstacles_pub.publish(d_msg);
+    obstacles_pub.publish(d_msg);   //publish
 
     if(waitKey (1) >= 0)  	   //break upon anykey
         break;
