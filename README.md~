@@ -10,6 +10,9 @@ Usage Details:
 Changes:
 - basic ros-wrapper for obstacle detection is complete
 
+Additional Notes:
+- requires pre-trained weights, cfg files
+
 Requirements:
 - cmake 2.8 or above
 - ROS indigo or above

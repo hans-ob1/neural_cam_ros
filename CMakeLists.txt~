@@ -43,7 +43,7 @@ if(DETECTOR)
 	#compile detector
 	rosbuild_add_executable(detector src/detector/main.cpp src/detector/supportfunc.cpp src/detector/supportfunc.hpp)
 	rosbuild_add_compile_flags(detector -std=c++11)
-	TARGET_LINK_LIBRARIES(detector${OpenCV_LIBS} neurlib)
+	TARGET_LINK_LIBRARIES(detector ${OpenCV_LIBS} neurlib)
 endif()
 
 

@@ -10,6 +10,7 @@ Modify here for your needs
 #include <stdlib.h>     /* malloc, calloc, realloc, free */
 #include <ctime>
 #include <fstream>
+#include <unistd.h>    /* get current work directory */
 
 #include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat)
 #include <opencv2/videoio/videoio.hpp>  // Video write
@@ -136,15 +137,27 @@ extern "C" image load_stream_cv()
 // initialization of deep learning network
 bool init_network_param(){
 
+	 char cwd[1024];
+	 string cwd_str;
+
+  	 if (getcwd(cwd, sizeof(cwd)) != NULL){
+      	fprintf(stdout, "Current working dir: %s\n", cwd);
+      	cwd_str = cwd;
+     }
+  	 else
+        perror("getcwd() error");
+
      char *datacfg;
      char *cfg;
      char *weights;
+     char *namelist;
      float thresh_desired;
      
-     //default
+     //default (running voc)
      string datafile = "cfg/voc.data";
      string archfile = "cfg/tiny-yolo-voc.cfg";
      string weightfile = "tiny-yolo-voc.weights";
+     string namefile = "data/voc.names";
 
      ifstream confFile("setup.cfg");
 
@@ -158,27 +171,35 @@ bool init_network_param(){
            if(getline(is_line, key, '=')){
                string value;
                if(getline(is_line, value)){
+
+               	  string value_fp = cwd_str + "/" + value;
                   if(cnt == 0){
-                    datacfg = new char[value.length() + 1];
-                    strcpy(datacfg, value.c_str());
+                    datacfg = new char[value_fp.length() + 1];
+                    strcpy(datacfg, value_fp.c_str());
                   }
                   else if(cnt == 1){
-                    cfg = new char[value.length() + 1];
-                    strcpy(cfg, value.c_str());
+                    cfg = new char[value_fp.length() + 1];
+                    strcpy(cfg, value_fp.c_str());
                   }
                   else if(cnt == 2){
 
-                    if(value.length() == 0)
+                    if(value_fp.length() == 0)
                        weights = 0;
-        else{
-                       weights = new char[value.length() + 1];
-                       strcpy(weights, value.c_str());
-        }
+        			else{
+                       weights = new char[value_fp.length() + 1];
+                       strcpy(weights, value_fp.c_str());
+        			}
 
                   }
                   else if(cnt == 3){
+
                     thresh_desired = strtof((value).c_str(),0); // string to float
+
+                  }else if(cnt == 4){
+                  	namelist = new char[value_fp.length() + 1];
+                  	strcpy(namelist, value_fp.c_str());        // get the name list
                   }
+
                   cnt++;
                }
            }
@@ -194,6 +215,9 @@ bool init_network_param(){
          weights = new char[weightfile.length() + 1];
          strcpy(weights, weightfile.c_str());
 
+         namelist = new char[weightfile.length() + 1];
+         strcpy(namelist, namefile.c_str());
+
          thresh_desired = 0.35;
 
          cout << "Error: Unable to open setup.cfg, make sure it exists in the parent directory" << endl;
@@ -203,11 +227,12 @@ bool init_network_param(){
 
      //initialize c api
  
-     setup_proceedure(datacfg, cfg, weights, thresh_desired);
+     setup_proceedure(datacfg, cfg, weights, namelist, thresh_desired);
 
      delete [] datacfg;
      delete [] cfg;
      delete [] weights;
+     delete [] namelist;
 
      return 1;
 }
@@ -240,13 +265,17 @@ vector<detectedBox> process_camera_frame(bool display){
 int main(int argc, char* argv[]){
 
   ros::init(argc, argv, "talker");
-  ros::NodeHandle n;
+  ros::NodeHandle n("~");
+
+  int serial_number = -1;
+  n.getParam("video_device", serial_number);
+  cout << "Webcam Serial: " << serial_number << endl;
 
   ros::Publisher obstacles_pub = n.advertise<neural_cam_ros::obstacleStack>("obstacles", 1000);
 
   /* will read setup.cfg file for configuration details */
 
-  if(!init_camera_param(0))
+  if(!init_camera_param(serial_number))
       return -1;
 
   init_network_param();       //initialize the CNN parameters from cfg files
@@ -277,9 +306,9 @@ int main(int argc, char* argv[]){
     d_msg.stack_len = curr_preprocessed.size();
     d_msg.stack_name = "test camera";      // check camera header
 
-    obstacles_pub.publish(d_msg);   //publish
+    obstacles_pub.publish(d_msg);  		   //publish
 
-    if(waitKey (1) >= 0)  	   //break upon anykey
+    if(waitKey (1) >= 0)  	              //break upon anykey
         break;
   }
 

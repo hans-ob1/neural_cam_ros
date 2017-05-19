@@ -1,4 +1,5 @@
 datacfg=onroad_cfg/full_model_3class/combo_v4.data
 cfg=onroad_cfg/full_model_3class/combo_v4.cfg
 weights=onroad_cfg/full_model_3class/combo_onroad_3class.weights
-thres=0.25
+thres=0.30
+names=onroad_cfg/full_model_3class/combo_v4.names

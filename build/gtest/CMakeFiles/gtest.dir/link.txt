@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC -O2 -g -DNDEBUG   -shared -Wl,-soname,libgtest.so -o /home/hxhx/darknet/haixun00/neural_cam_ros/lib/libgtest.so CMakeFiles/gtest.dir/src/gtest-all.cc.o  -L/opt/ros/indigo/lib  -L/home/hxhx/darknet/haixun00/neural_cam_ros/build/gtest/src -lpthread -Wl,-rpath,/opt/ros/indigo/lib:/home/hxhx/darknet/haixun00/neural_cam_ros/build/gtest/src 

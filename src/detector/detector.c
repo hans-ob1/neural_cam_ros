@@ -22,9 +22,8 @@ float hier_thresh = 0.5;
 char *filename;
 
 list *options;
-char *name_list;
 char **names;
-image **alphabet;
+
 network net;
 char buff[256];
 char *input;
@@ -59,14 +58,12 @@ void draw_bounding_box(int im_w, int im_h, int num, float thresh, box *boxes, fl
 
 // ************* setup values (FOR EVALUATION ONLY!) *************
 
-void setup_proceedure(char *datacfg, char *cfg, char *weights, float thresh_desired){
+void setup_proceedure(char *datacfg, char *cfg, char *weights, char *name_list, float thresh_desired){
     
  //setup proceedure
  options = read_data_cfg(datacfg);
 
- name_list = option_find_str(options, "names", "data/names.list");
  names = get_labels(name_list);
- alphabet = load_alphabet();
 
  //load network based on cfg
  net = parse_network_cfg(cfg);
