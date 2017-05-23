@@ -3,6 +3,9 @@
 YOLO implementation with ROS
 Modify here for your needs
 
+DOES NOT COME WITH WARRANTY.
+USE AT YOUR OWN RISK
+
 */
 
 
