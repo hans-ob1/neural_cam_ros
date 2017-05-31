@@ -6,6 +6,7 @@ Usage Details:
 - rosmake
 - rosrun neural_cam_ros main (be sure to run roscore first)
 - open another terminal and type "rostopic echo /obstacle" to see detected objects been published
+- launch multiple cameras using multicam.launch file
 
 Changes:
 - basic ros-wrapper for obstacle detection is complete

@@ -1,7 +1,7 @@
 <package>
   <description brief="darknet_yolo2_tracking">
 
-     darknet_yolo2_tracking
+     neural_cam_ros_tracking
 
   </description>
   <author>Caroline Pantofaru</author>

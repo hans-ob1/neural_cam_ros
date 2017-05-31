@@ -4,11 +4,4 @@
     <param name="video_device" value="0"/>
   </node>
  </group>
-
- <group ns="camera2">
-  <node name="usb_cam2" pkg="neural_cam_ros" type="detector" output="screen" cwd="node">
-    <param name="video_device" value="1"/>
-  </node>
- </group>
-
 </launch>

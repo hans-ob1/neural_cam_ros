@@ -13,7 +13,7 @@
   <depend package="std_msgs"/>
   <depend package="geometry_msgs"/>
   <depend package="rosconsole"/>
-  <depend package="rospy"/>
+  <!--depend package="rospy"/-->
   <!--depend package="cv_bridge"/-->
   <!--depend package="stereo_utils"/-->
   <depend package="stereo_msgs"/>
