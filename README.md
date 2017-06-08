@@ -26,3 +26,11 @@ requires ROS to run rosmake
     $ rosmake
     $ rosrun neural_cam_ros detector
  ```
+
+##### Common Error
+if cmake complain cannot find curand/cublas, be sure to add the following symbolic link:
+
+```sh
+   sudo ln -s /usr/local/cuda/lib64/libcurand.so /usr/lib/libcurand.so
+   sudo ln -s /usr/local/cuda/lib64/libcublas.so /usr/lib/libcublas.so
+```

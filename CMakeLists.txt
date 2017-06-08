@@ -7,7 +7,8 @@ option(CALIBRATION "compile calibration" OFF)
 
 rosbuild_init()
 
-find_package(OpenCV 3.1 REQUIRED)
+#find_package(OpenCV 3.1 REQUIRED)
+find_package(OpenCV)
 
 rosbuild_genmsg()
 
@@ -15,7 +16,7 @@ rosbuild_genmsg()
 file(GLOB SOURCES "src/detector/*.c" "src/detector/*.cu" "src/detector/*.h")
 
 if(CUDA)
-	find_package(CUDA 7.5 REQUIRED)
+	find_package(CUDA 8.0 REQUIRED)
 	INCLUDE(FindCUDA)
 	INCLUDE_DIRECTORIES(/usr/local/cuda/include)
 	add_definitions(-DGPU -DCUDNN)
