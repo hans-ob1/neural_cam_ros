@@ -1,15 +1,17 @@
 # neural_cam_ros
 
-neural_cam_ros is basically an extension of neural-cam except wrapped with ROS. The backend framework used is darknet developed by Joseph Redmon. This module is designed to quickly test the state-of-the-art obstacle detection for moving robots. No training option is available in this module.
+neural_cam_ros is basically an extension of neural-cam except wrapped with ROS. The backend framework used is darknet developed by Joseph Redmon. You can visit his site here: https://pjreddie.com/darknet/yolo/. This module is designed to quickly test the state-of-the-art obstacle detection for moving robots. No training option is available in this module.
 
 ##### Update
   - basic ros-wrapper for obstacle detection is complete
+  - includes link for pre-trained weights/configuration files
 
 ##### Additional Information
   - requires pre-trained weights, cfg files
   - rename the parent directory to neural_cam_ros
   - open another terminal and type "rostopic echo /obstacle" to see detected objects been published
   - edit/launch multiple cameras using multicam.launch file
+  - i had pre-trained a set of weights to detect road obstacles, there are three classes: 1 - person, 2 - bike and 3 - vehicles. you can download them from this link: https://drive.google.com/open?id=0Bzdkh7sucheCb1V1bG5OWWZZTGs
 
 ##### System Requirement
 - cmake 2.8 or above
@@ -24,13 +26,17 @@ requires ROS to run rosmake
   ```sh
     $ roscd neural_cam_ros
     $ rosmake
-    $ rosrun neural_cam_ros detector
+    $ roslaunch neural_cam_ros multicam.launch
  ```
 
 ##### Common Error
-if cmake complain cannot find curand/cublas, be sure to add the following symbolic link:
+if cmake display of not able to find "curand/cublas/cudnn", be sure to add the following symbolic link:
 
 ```sh
    sudo ln -s /usr/local/cuda/lib64/libcurand.so /usr/lib/libcurand.so
    sudo ln -s /usr/local/cuda/lib64/libcublas.so /usr/lib/libcublas.so
+   sudo ln -s /usr/local/cuda/lib64/libcudnn.so /usr/lib/libcudnn.so
 ```
+
+##### Demo Video on YouTube
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/ZW0B2wk8dPA/0.jpg)](http://www.youtube.com/watch?v=ZW0B2wk8dPA "Yolo Road Obstacle Detector")
