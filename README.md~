@@ -4,6 +4,7 @@ neural_cam_ros is basically an extension of neural-cam except wrapped with ROS. 
 
 ##### Update
   - basic ros-wrapper for obstacle detection is complete
+  - includes link for pre-trained weights/configuration files
 
 ##### Additional Information
   - requires pre-trained weights, cfg files
@@ -18,6 +19,7 @@ neural_cam_ros is basically an extension of neural-cam except wrapped with ROS. 
 - runs on opencv 3.1 (optional if you only intend to poccess images)
 - ubuntu 14.04 above
 - cuda 7.5 above (modify the CMakeList.txt if you dont have a GPU!)
+- cuDNN v5 (download from nvidia official website, need cuda 8.0)
 - latest nvidia graphic driver 367.48
 
 ##### Usage Detail
@@ -36,3 +38,6 @@ if cmake display of not able to find "curand/cublas/cudnn", be sure to add the f
    sudo ln -s /usr/local/cuda/lib64/libcublas.so /usr/lib/libcublas.so
    sudo ln -s /usr/local/cuda/lib64/libcudnn.so /usr/lib/libcudnn.so
 ```
+
+##### Demo Video on YouTube
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/ZW0B2wk8dPA/0.jpg)](http://www.youtube.com/watch?v=ZW0B2wk8dPA "Yolo Road Obstacle Detector")

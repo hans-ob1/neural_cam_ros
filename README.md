@@ -1,5 +1,4 @@
 # neural_cam_ros
-
 neural_cam_ros is basically an extension of neural-cam except wrapped with ROS. The backend framework used is darknet developed by Joseph Redmon. You can visit his site here: https://pjreddie.com/darknet/yolo/. This module is designed to quickly test the state-of-the-art obstacle detection for moving robots. No training option is available in this module.
 
 ##### Update
@@ -11,7 +10,7 @@ neural_cam_ros is basically an extension of neural-cam except wrapped with ROS. 
   - rename the parent directory to neural_cam_ros
   - open another terminal and type "rostopic echo /obstacle" to see detected objects been published
   - edit/launch multiple cameras using multicam.launch file
-  - i had pre-trained a set of weights to detect road obstacles, there are three classes: 1 - person, 2 - bike and 3 - vehicles. you can download them from this link: https://drive.google.com/open?id=0Bzdkh7sucheCb1V1bG5OWWZZTGs
+  - i had pre-trained a set of weights to detect road obstacles, there are three classes: 1 - person, 2 - bike and 3 - vehicles. you can download them from this link: https://drive.google.com/open?id=0Bzdkh7sucheCb1V1bG5OWWZZTGs. Do take note that is set of weights is trained with cuDNN v5, be sure to download that from nvidia website. Otherwise, there will be no detections!
 
 ##### System Requirement
 - cmake 2.8 or above
@@ -19,6 +18,7 @@ neural_cam_ros is basically an extension of neural-cam except wrapped with ROS. 
 - runs on opencv 3.1 (optional if you only intend to poccess images)
 - ubuntu 14.04 above
 - cuda 7.5 above (modify the CMakeList.txt if you dont have a GPU!)
+- cuDNN v5 (download from nvidia official website, need cuda 8.0)
 - latest nvidia graphic driver 367.48
 
 ##### Usage Detail
