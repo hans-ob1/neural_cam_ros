@@ -76,12 +76,9 @@ float64 z
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
         length = len(_x)
-      if python3:
-        buff.write(struct.pack('<I%sB'%length, length, *_x))
-      else:
-        buff.write(struct.pack('<I%ss'%length, length, _x))
+      buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
-      buff.write(_struct_6d.pack(_x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z))
+      buff.write(_get_struct_6d().pack(_x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -108,7 +105,7 @@ float64 z
       _x = self
       start = end
       end += 48
-      (_x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z,) = _struct_6d.unpack(str[start:end])
+      (_x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z,) = _get_struct_6d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -126,12 +123,9 @@ float64 z
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
         length = len(_x)
-      if python3:
-        buff.write(struct.pack('<I%sB'%length, length, *_x))
-      else:
-        buff.write(struct.pack('<I%ss'%length, length, _x))
+      buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
-      buff.write(_struct_6d.pack(_x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z))
+      buff.write(_get_struct_6d().pack(_x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -159,10 +153,18 @@ float64 z
       _x = self
       start = end
       end += 48
-      (_x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z,) = _struct_6d.unpack(str[start:end])
+      (_x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z,) = _get_struct_6d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
 
 _struct_I = genpy.struct_I
-_struct_6d = struct.Struct("<6d")
+def _get_struct_I():
+    global _struct_I
+    return _struct_I
+_struct_6d = None
+def _get_struct_6d():
+    global _struct_6d
+    if _struct_6d is None:
+        _struct_6d = struct.Struct("<6d")
+    return _struct_6d

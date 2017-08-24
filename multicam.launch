@@ -2,6 +2,8 @@
  <group ns="camera1">
   <node name="usb_cam1" pkg="neural_cam_ros" type="detector" output="screen" cwd="node">
     <param name="video_device" value="0"/>
+    <param name="cap_width" value="1280"/>
+    <param name="cap_height" value="720"/>
   </node>
  </group>
 </launch>

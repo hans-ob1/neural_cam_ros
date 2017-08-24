@@ -1,7 +1,7 @@
 /*
 
 YOLO implementation with ROS
-Modify here for your needs
+Modify here to suit your need
 
 DOES NOT COME WITH WARRANTY.
 USE AT YOUR OWN RISK
@@ -33,6 +33,11 @@ USE AT YOUR OWN RISK
 #include <geometry_msgs/Point32.h>
 #include <tf/transform_listener.h>
 #include <laser_geometry/laser_geometry.h>
+
+// for publish of images
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/image_encodings.h>
 
 using namespace std;
 using namespace cv;
@@ -241,14 +246,17 @@ bool init_network_param(){
 }
 
 // initialize camera setup
-bool init_camera_param(int cam_id){
+bool init_camera_param(int cam_id, int cap_w, int cap_h){
 
       cap_un.open(cam_id);
       if(!cap_un.isOpened()){
          cout << "camera stream failed to open!" <<endl;
-   		return false;
-      }else
+   		   return false;
+      }else{
+         cap_un.set(CV_CAP_PROP_FRAME_WIDTH,cap_w);
+         cap_un.set(CV_CAP_PROP_FRAME_HEIGHT,cap_h);
          return true;
+      }
 }
 
 // run this in a loop
@@ -269,21 +277,35 @@ int main(int argc, char* argv[]){
 
   ros::init(argc, argv, "talker");
   ros::NodeHandle n("~");
-
+  
+  // get parameters from launch file
   int serial_number = -1;
-  n.getParam("video_device", serial_number);
-  cout << "Webcam Serial: " << serial_number << endl;
+  int cap_width = 640;
+  int cap_height = 480;
 
+  n.getParam("video_device", serial_number);
+  n.getParam("cap_width", cap_width);
+  n.getParam("cap_height", cap_height);
+
+  cout << "Webcam Serial: " << serial_number << endl;
+  cout << "Capture Resoultion: " << cap_width << "x" << cap_height << endl;
+  
+  // ros publish items: image, object detected arrays
   ros::Publisher obstacles_pub = n.advertise<neural_cam_ros::obstacleStack>("obstacles", 1000);
 
-  /* will read setup.cfg file for configuration details */
+  image_transport::ImageTransport it_(n);
+  image_transport::Publisher image_pub_ = it_.advertise("/neural_cam_ros/frames", 1);   //publishes a raw image
 
-  if(!init_camera_param(serial_number))
+  cv_bridge::CvImage out_msg;
+  out_msg.encoding = sensor_msgs::image_encodings::BGR8; // Encode to BGR8 format
+
+  /* will read setup.cfg file for configuration details */
+  if(!init_camera_param(serial_number, cap_width, cap_height))
       return -1;
 
-  init_network_param();       //initialize the CNN parameters from cfg files
+  init_network_param();       //initialize the CNN parameters
 
-  for(;;){  				   //process and show everyframe
+  for(;;){
 
   	//declare of ROS Parameters (refresh every cycle)
   	neural_cam_ros::obstacle d_data;
@@ -291,7 +313,8 @@ int main(int argc, char* argv[]){
 
     vector<detectedBox> curr_preprocessed;
 
-    curr_preprocessed = process_camera_frame(true); //true if want to display detection, false for no display
+    out_msg.image    = img_cpp;                       // convert Mat into msg
+    curr_preprocessed = process_camera_frame(true);   //true if want to display detection, false for no display
 
     for(int i = 0; i < curr_preprocessed.size(); i++){
 
@@ -309,9 +332,13 @@ int main(int argc, char* argv[]){
     d_msg.stack_len = curr_preprocessed.size();
     d_msg.stack_name = "test camera";      // check camera header
 
-    obstacles_pub.publish(d_msg);  		   //publish
+    out_msg.image    = img_cpp;           // Your cv::Mat
 
-    if(waitKey (1) >= 0)  	              //break upon anykey
+    //publish items
+    obstacles_pub.publish(d_msg);  
+    image_pub_.publish(out_msg.toImageMsg());
+
+    if(waitKey (1) == 'q')  	               // close upon press 'q'
         break;
   }
 

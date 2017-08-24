@@ -14,12 +14,12 @@
   <depend package="geometry_msgs"/>
   <depend package="rosconsole"/>
   <!--depend package="rospy"/-->
-  <!--depend package="cv_bridge"/-->
+  <depend package="cv_bridge"/>
   <!--depend package="stereo_utils"/-->
   <depend package="stereo_msgs"/>
   <depend package="sensor_msgs"/>
   <depend package="laser_geometry"/>
-  <!--depend package="image_transport"/-->
+  <depend package="image_transport"/>
   <depend package="tf"/>
 
 </package>

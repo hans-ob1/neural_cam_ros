@@ -83,11 +83,8 @@ float64 z
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
         length = len(_x)
-      if python3:
-        buff.write(struct.pack('<I%sB'%length, length, *_x))
-      else:
-        buff.write(struct.pack('<I%ss'%length, length, _x))
-      buff.write(_struct_I.pack(self.stack_len))
+      buff.write(struct.pack('<I%ss'%length, length, _x))
+      buff.write(_get_struct_I().pack(self.stack_len))
       length = len(self.stack_obstacles)
       buff.write(_struct_I.pack(length))
       for val1 in self.stack_obstacles:
@@ -96,16 +93,13 @@ float64 z
         if python3 or type(_x) == unicode:
           _x = _x.encode('utf-8')
           length = len(_x)
-        if python3:
-          buff.write(struct.pack('<I%sB'%length, length, *_x))
-        else:
-          buff.write(struct.pack('<I%ss'%length, length, _x))
+        buff.write(struct.pack('<I%ss'%length, length, _x))
         _v1 = val1.topleft
         _x = _v1
-        buff.write(_struct_3d.pack(_x.x, _x.y, _x.z))
+        buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
         _v2 = val1.bottomright
         _x = _v2
-        buff.write(_struct_3d.pack(_x.x, _x.y, _x.z))
+        buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -129,7 +123,7 @@ float64 z
         self.stack_name = str[start:end]
       start = end
       end += 4
-      (self.stack_len,) = _struct_I.unpack(str[start:end])
+      (self.stack_len,) = _get_struct_I().unpack(str[start:end])
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
@@ -149,12 +143,12 @@ float64 z
         _x = _v3
         start = end
         end += 24
-        (_x.x, _x.y, _x.z,) = _struct_3d.unpack(str[start:end])
+        (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
         _v4 = val1.bottomright
         _x = _v4
         start = end
         end += 24
-        (_x.x, _x.y, _x.z,) = _struct_3d.unpack(str[start:end])
+        (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
         self.stack_obstacles.append(val1)
       return self
     except struct.error as e:
@@ -173,11 +167,8 @@ float64 z
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
         length = len(_x)
-      if python3:
-        buff.write(struct.pack('<I%sB'%length, length, *_x))
-      else:
-        buff.write(struct.pack('<I%ss'%length, length, _x))
-      buff.write(_struct_I.pack(self.stack_len))
+      buff.write(struct.pack('<I%ss'%length, length, _x))
+      buff.write(_get_struct_I().pack(self.stack_len))
       length = len(self.stack_obstacles)
       buff.write(_struct_I.pack(length))
       for val1 in self.stack_obstacles:
@@ -186,16 +177,13 @@ float64 z
         if python3 or type(_x) == unicode:
           _x = _x.encode('utf-8')
           length = len(_x)
-        if python3:
-          buff.write(struct.pack('<I%sB'%length, length, *_x))
-        else:
-          buff.write(struct.pack('<I%ss'%length, length, _x))
+        buff.write(struct.pack('<I%ss'%length, length, _x))
         _v5 = val1.topleft
         _x = _v5
-        buff.write(_struct_3d.pack(_x.x, _x.y, _x.z))
+        buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
         _v6 = val1.bottomright
         _x = _v6
-        buff.write(_struct_3d.pack(_x.x, _x.y, _x.z))
+        buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -220,7 +208,7 @@ float64 z
         self.stack_name = str[start:end]
       start = end
       end += 4
-      (self.stack_len,) = _struct_I.unpack(str[start:end])
+      (self.stack_len,) = _get_struct_I().unpack(str[start:end])
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
@@ -240,16 +228,24 @@ float64 z
         _x = _v7
         start = end
         end += 24
-        (_x.x, _x.y, _x.z,) = _struct_3d.unpack(str[start:end])
+        (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
         _v8 = val1.bottomright
         _x = _v8
         start = end
         end += 24
-        (_x.x, _x.y, _x.z,) = _struct_3d.unpack(str[start:end])
+        (_x.x, _x.y, _x.z,) = _get_struct_3d().unpack(str[start:end])
         self.stack_obstacles.append(val1)
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
 
 _struct_I = genpy.struct_I
-_struct_3d = struct.Struct("<3d")
+def _get_struct_I():
+    global _struct_I
+    return _struct_I
+_struct_3d = None
+def _get_struct_3d():
+    global _struct_3d
+    if _struct_3d is None:
+        _struct_3d = struct.Struct("<3d")
+    return _struct_3d
