@@ -1,45 +1,37 @@
+#DetectNet ROS Package
+#Choose -DSUBIMAGES to subscribe a image node over ROS pipline
 cmake_minimum_required(VERSION 2.4.6)
 include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 
-option(CUDA "compile with cuda" ON)
-option(DETECTOR "compile detector" ON)
-option(CALIBRATION "compile calibration" OFF)
-
 rosbuild_init()
 
-#find_package(OpenCV 3.1 REQUIRED)
-find_package(OpenCV)
+find_package(OpenCV REQUIRED)
+find_package(CUDA 8.0 REQUIRED)
+
+include_directories(${OPENCV_INCLUDE_DIRS})
+include_directories(${CUDA_INCLUDE_DIRS})
+
+link_directories(${OpenCV_LIBRARY_DIRS})
+link_directories(${CUDA_LIBRARY_DIRS})
 
 rosbuild_genmsg()
 
-#wildcard additions:
+add_definitions(-DGPU -DCUDNN -DSUBIMAGES)
+
+# Compile Darknet link Library:
 file(GLOB SOURCES "src/detector/*.c" "src/detector/*.cu" "src/detector/*.h")
+cuda_add_library(neurlib ${SOURCES} OPTIONS -arch sm_61)
+TARGET_LINK_LIBRARIES(neurlib m pthread stdc++ cublas curand cudnn)
 
-if(CUDA)
-	find_package(CUDA 8.0 REQUIRED)
-	INCLUDE(FindCUDA)
-	INCLUDE_DIRECTORIES(/usr/local/cuda/include)
-	add_definitions(-DGPU -DCUDNN)
-	set(
-	    CUDA_NVCC_FLAGS
-	    ${CUDA_NVCC_FLAGS};
-	    -O3 -gencode arch=compute_61,code=sm_61
-	    )
+# Compile detector
+rosbuild_add_executable(detector 
+	                    src/detector/main.cpp 
+	                    src/detector/supportfunc.cpp 
+	                    src/detector/supportfunc.hpp
+	                    )
+	                        
+rosbuild_add_compile_flags(detector -std=c++11)
+TARGET_LINK_LIBRARIES(detector ${OpenCV_LIBS} neurlib)
 
-	message("Compiling with CUDA ON")
-	cuda_add_library(neurlib ${SOURCES} OPTIONS -arch sm_61)
-	TARGET_LINK_LIBRARIES(neurlib m pthread stdc++ cublas curand cudnn)
-else()
-	add_library(neurlib ${SOURCES})
-	TARGET_LINK_LIBRARIES(neurlib m pthread stdc++)
-	message("Compiling with CUDA OFF")
-endif()
-
-if(DETECTOR)
-	#compile detector
-	rosbuild_add_executable(detector src/detector/main.cpp src/detector/supportfunc.cpp src/detector/supportfunc.hpp)
-	rosbuild_add_compile_flags(detector -std=c++11)
-	TARGET_LINK_LIBRARIES(detector ${OpenCV_LIBS} neurlib)
-endif()
 
 

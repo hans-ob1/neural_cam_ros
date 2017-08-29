@@ -30,7 +30,6 @@ char *input;
 float nms;
 clock_t time_t1;
 
-
 // ************* support functions *************
 void draw_bounding_box(int im_w, int im_h, int num, float thresh, box *boxes, float **probs, char **names, int classes)  //draw rectangle boundaries
 {
@@ -76,9 +75,9 @@ void setup_proceedure(char *datacfg, char *cfg, char *weights, char *name_list, 
  srand(2222222);
 }
 
-void camera_detector()  // run this through a loop
+void camera_detector(image im)  // run this through a loop
 {    
-   image im = load_stream_cv();  //capture a frame from camera
+   //image im = load_stream_cv();  //capture a frame from camera or ros image
 
    image sized = resize_image(im, net.w, net.h);
    layer l = net.layers[net.n-1];

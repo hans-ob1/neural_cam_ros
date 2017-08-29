@@ -25,7 +25,7 @@ USE AT YOUR OWN RISK
 
 #include <neural_cam_ros/obstacle.h>
 #include <neural_cam_ros/obstacleStack.h>
-//#include <thread>
+#include <thread>
 
 #include "ros/ros.h"
 #include "std_msgs/String.h"
@@ -50,16 +50,18 @@ extern "C" {
 // ********* support functions ****************************
 // ********************************************************
 
-VideoCapture cap_un(0);
+VideoCapture cap_un;
 Mat img_cpp;
 
 // temp storage for detected objects
 std::vector<detectedBox> detectedobjects;
 
+/*
 // convert IplImage to Mat   (NOT IN USE)
 void convert_frame(IplImage* input){
     img_cpp = cv::cvarrToMat(input);
 }
+*/
 
 // draw boxes
 extern "C" void label_func(int tl_x, int tl_y, int br_x, int br_y, char *names){
@@ -127,16 +129,14 @@ vector<detectedBox> display_frame_cv(bool display){
 }
 
 // capture from camera stream
-extern "C" image load_stream_cv()
+image convertMat(Mat input)
 {
-    cap_un >> img_cpp;
-
-    if (img_cpp.empty()){
+   if (input.empty()){
        cout << "Warning: frame is empty! Check camera setup" << endl;
        return make_empty_image(0,0,0);
     }
 
-    image im = mat_to_image(img_cpp);
+    image im = mat_to_image(input);
     rgbgr_image(im);
     return im;
 }
@@ -260,14 +260,83 @@ bool init_camera_param(int cam_id, int cap_w, int cap_h){
 }
 
 // run this in a loop
-vector<detectedBox> process_camera_frame(bool display){
-     camera_detector();      //draw frame from img_cpp;
+vector<detectedBox> process_camera_frame(bool display, Mat in){
+
+     image im = convertMat(in);
+     camera_detector(im);      //draw frame from img_cpp;
 
      vector<detectedBox> curr_captured;
      curr_captured = display_frame_cv(display);
 
      return curr_captured;
 }
+
+
+// pub image
+class ImageProcessor
+{
+  ros::NodeHandle nh_;
+  ros::Publisher obstacles_pub;
+
+  image_transport::ImageTransport it_;
+  image_transport::Subscriber image_sub_;
+
+public:
+  ImageProcessor():it_(nh_)
+  {
+    // Subscrive to input video feed and publish output video feed
+    image_sub_ = it_.subscribe("/stereo_depth_ros/frames", 1, &ImageProcessor::imageCb, this);
+    obstacles_pub = nh_.advertise<neural_cam_ros::obstacleStack>("obstacles", 1000);
+
+  }
+
+  ~ImageProcessor(){
+  }
+
+  void imageCb(const sensor_msgs::ImageConstPtr& msg)
+  {
+  
+    cv_bridge::CvImagePtr cv_ptr;
+    try
+    {
+      cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+    }
+    catch (cv_bridge::Exception& e)
+    {
+      ROS_ERROR("cv_bridge exception: %s", e.what());
+      return;
+    }
+
+    img_cpp = cv_ptr->image;
+    
+    neural_cam_ros::obstacle d_data;
+    neural_cam_ros::obstacleStack d_msg;
+
+    vector<detectedBox> curr_preprocessed = process_camera_frame(true, img_cpp);   //true if want to display detection, false for no display
+
+    for(unsigned int i = 0; i < curr_preprocessed.size(); i++){
+
+      d_data.topleft.x = curr_preprocessed[i].topLeft.x;
+      d_data.topleft.y = curr_preprocessed[i].topLeft.y;
+
+      d_data.bottomright.x = curr_preprocessed[i].bottomRight.x;
+      d_data.bottomright.y = curr_preprocessed[i].bottomRight.y;
+
+      d_data.name = curr_preprocessed[i].name;
+
+      d_msg.stack_obstacles.push_back(d_data);
+    }
+
+    d_msg.stack_len = curr_preprocessed.size();
+    d_msg.stack_name = "detections";      // check camera header
+
+    obstacles_pub.publish(d_msg);
+    
+    cv::waitKey(1);
+  }
+
+};
+
 
 //-------------------------------------------------------->
 //<---------------------- main ---------------------------->
@@ -276,8 +345,19 @@ vector<detectedBox> process_camera_frame(bool display){
 int main(int argc, char* argv[]){
 
   ros::init(argc, argv, "talker");
-  ros::NodeHandle n("~");
   
+#ifdef SUBIMAGES
+
+  init_network_param();       //initialize the CNN parameters
+  ImageProcessor ic;
+  ros::spin();
+
+#else
+  ros::NodeHandle n("~");
+
+  // ros publish items: image, object detected arrays
+  ros::Publisher obstacles_pub = n.advertise<neural_cam_ros::obstacleStack>("obstacles", 1000);
+
   // get parameters from launch file
   int serial_number = -1;
   int cap_width = 640;
@@ -286,12 +366,10 @@ int main(int argc, char* argv[]){
   n.getParam("video_device", serial_number);
   n.getParam("cap_width", cap_width);
   n.getParam("cap_height", cap_height);
-
+  
+  cout << "Direct Image Acquisition from Camera Device" << serial_number << endl;
   cout << "Webcam Serial: " << serial_number << endl;
   cout << "Capture Resoultion: " << cap_width << "x" << cap_height << endl;
-  
-  // ros publish items: image, object detected arrays
-  ros::Publisher obstacles_pub = n.advertise<neural_cam_ros::obstacleStack>("obstacles", 1000);
 
   image_transport::ImageTransport it_(n);
   image_transport::Publisher image_pub_ = it_.advertise("/neural_cam_ros/frames", 1);   //publishes a raw image
@@ -307,14 +385,15 @@ int main(int argc, char* argv[]){
 
   for(;;){
 
+    //TODO: tidy up
   	//declare of ROS Parameters (refresh every cycle)
   	neural_cam_ros::obstacle d_data;
   	neural_cam_ros::obstacleStack d_msg;
 
     vector<detectedBox> curr_preprocessed;
 
-    out_msg.image    = img_cpp;                       // convert Mat into msg
-    curr_preprocessed = process_camera_frame(true);   //true if want to display detection, false for no display
+    cap_un >> img_cpp;
+    curr_preprocessed = process_camera_frame(false,img_cpp);   //true if want to display detection, false for no display
 
     for(int i = 0; i < curr_preprocessed.size(); i++){
 
@@ -330,17 +409,18 @@ int main(int argc, char* argv[]){
     }
 
     d_msg.stack_len = curr_preprocessed.size();
-    d_msg.stack_name = "test camera";      // check camera header
+    d_msg.stack_name = "detections";      // check camera header
 
-    out_msg.image    = img_cpp;           // Your cv::Mat
+    obstacles_pub.publish(d_msg);
 
-    //publish items
-    obstacles_pub.publish(d_msg);  
+    out_msg.image    = img_cpp;           // Your cv::Mat  
     image_pub_.publish(out_msg.toImageMsg());
 
     if(waitKey (1) == 'q')  	               // close upon press 'q'
         break;
   }
+
+#endif
 
    return 0;
 }
