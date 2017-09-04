@@ -1,7 +1,0 @@
-<launch>
- <group ns="camera1">
-  <node name="usb_cam1" pkg="neural_cam_ros" type="detector" output="screen" cwd="node">
-    <param name="video_device" value="0"/>
-  </node>
- </group>
-</launch>

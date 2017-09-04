@@ -1,3 +1,5 @@
+[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]()
+[![Codecov](https://img.shields.io/codecov/c/github/codecov/example-python.svg)]()
 # neural_cam_ros
 neural_cam_ros is essentially an ros wrapper of neural-cam. The backend framework used is darknet developed by Joseph Redmon. You can visit his site here: https://pjreddie.com/darknet/yolo/. This module is designed to quickly test the state-of-the-art obstacle detection/tracking for mobile robot platform. No training option is available in this module.
 
