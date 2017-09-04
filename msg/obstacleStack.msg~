@@ -1,3 +1,0 @@
-string stack_name
-uint32 stack_len
-Obstacles[] stack_obstacles
