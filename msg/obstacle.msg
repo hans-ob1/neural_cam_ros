@@ -2,6 +2,7 @@
 #info: planar_ is plane position information
 
 string name
+float32 prob
 geometry_msgs/Point topleft
 geometry_msgs/Point bottomright
 

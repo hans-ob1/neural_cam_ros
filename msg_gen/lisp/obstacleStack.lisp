@@ -100,16 +100,16 @@
   "neural_cam_ros/obstacleStack")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<obstacleStack>)))
   "Returns md5sum for a message object of type '<obstacleStack>"
-  "78f69d2c2bc1534a704126e4efe4e06e")
+  "4e22f0b6eef92b7f95e181433e52bbcc")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'obstacleStack)))
   "Returns md5sum for a message object of type 'obstacleStack"
-  "78f69d2c2bc1534a704126e4efe4e06e")
+  "4e22f0b6eef92b7f95e181433e52bbcc")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<obstacleStack>)))
   "Returns full string definition for message of type '<obstacleStack>"
-  (cl:format cl:nil "string stack_name~%uint32 stack_len~%obstacle[] stack_obstacles~%~%================================================================================~%MSG: neural_cam_ros/obstacle~%#info: topleft_, bottomright_ refering to image~%#info: planar_ is plane position information~%~%string name~%geometry_msgs/Point topleft~%geometry_msgs/Point bottomright~%~%#string name~%#float32 depth~%~%================================================================================~%MSG: geometry_msgs/Point~%# This contains the position of a point in free space~%float64 x~%float64 y~%float64 z~%~%~%"))
+  (cl:format cl:nil "string stack_name~%uint32 stack_len~%obstacle[] stack_obstacles~%~%================================================================================~%MSG: neural_cam_ros/obstacle~%#info: topleft_, bottomright_ refering to image~%#info: planar_ is plane position information~%~%string name~%float32 prob~%geometry_msgs/Point topleft~%geometry_msgs/Point bottomright~%~%#string name~%#float32 depth~%~%================================================================================~%MSG: geometry_msgs/Point~%# This contains the position of a point in free space~%float64 x~%float64 y~%float64 z~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'obstacleStack)))
   "Returns full string definition for message of type 'obstacleStack"
-  (cl:format cl:nil "string stack_name~%uint32 stack_len~%obstacle[] stack_obstacles~%~%================================================================================~%MSG: neural_cam_ros/obstacle~%#info: topleft_, bottomright_ refering to image~%#info: planar_ is plane position information~%~%string name~%geometry_msgs/Point topleft~%geometry_msgs/Point bottomright~%~%#string name~%#float32 depth~%~%================================================================================~%MSG: geometry_msgs/Point~%# This contains the position of a point in free space~%float64 x~%float64 y~%float64 z~%~%~%"))
+  (cl:format cl:nil "string stack_name~%uint32 stack_len~%obstacle[] stack_obstacles~%~%================================================================================~%MSG: neural_cam_ros/obstacle~%#info: topleft_, bottomright_ refering to image~%#info: planar_ is plane position information~%~%string name~%float32 prob~%geometry_msgs/Point topleft~%geometry_msgs/Point bottomright~%~%#string name~%#float32 depth~%~%================================================================================~%MSG: geometry_msgs/Point~%# This contains the position of a point in free space~%float64 x~%float64 y~%float64 z~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <obstacleStack>))
   (cl:+ 0
      4 (cl:length (cl:slot-value msg 'stack_name))

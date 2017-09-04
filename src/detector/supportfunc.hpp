@@ -23,6 +23,7 @@ struct detectedBox{
     Point bottomRight;
     string name;
     Scalar objectColor;
+    float prob;
 };
 
 

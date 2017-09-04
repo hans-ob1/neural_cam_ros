@@ -8,13 +8,14 @@ import struct
 import geometry_msgs.msg
 
 class obstacle(genpy.Message):
-  _md5sum = "86dcd3c1df638bca4619c021d8bfc938"
+  _md5sum = "2ed324cc68b63371ced6bc19d77946d2"
   _type = "neural_cam_ros/obstacle"
   _has_header = False #flag to mark the presence of a Header object
   _full_text = """#info: topleft_, bottomright_ refering to image
 #info: planar_ is plane position information
 
 string name
+float32 prob
 geometry_msgs/Point topleft
 geometry_msgs/Point bottomright
 
@@ -28,8 +29,8 @@ float64 x
 float64 y
 float64 z
 """
-  __slots__ = ['name','topleft','bottomright']
-  _slot_types = ['string','geometry_msgs/Point','geometry_msgs/Point']
+  __slots__ = ['name','prob','topleft','bottomright']
+  _slot_types = ['string','float32','geometry_msgs/Point','geometry_msgs/Point']
 
   def __init__(self, *args, **kwds):
     """
@@ -39,7 +40,7 @@ float64 z
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       name,topleft,bottomright
+       name,prob,topleft,bottomright
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -50,12 +51,15 @@ float64 z
       #message fields cannot be None, assign default values for those that are
       if self.name is None:
         self.name = ''
+      if self.prob is None:
+        self.prob = 0.
       if self.topleft is None:
         self.topleft = geometry_msgs.msg.Point()
       if self.bottomright is None:
         self.bottomright = geometry_msgs.msg.Point()
     else:
       self.name = ''
+      self.prob = 0.
       self.topleft = geometry_msgs.msg.Point()
       self.bottomright = geometry_msgs.msg.Point()
 
@@ -78,7 +82,7 @@ float64 z
         length = len(_x)
       buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
-      buff.write(_get_struct_6d().pack(_x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z))
+      buff.write(_get_struct_f6d().pack(_x.prob, _x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -104,8 +108,8 @@ float64 z
         self.name = str[start:end]
       _x = self
       start = end
-      end += 48
-      (_x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z,) = _get_struct_6d().unpack(str[start:end])
+      end += 52
+      (_x.prob, _x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z,) = _get_struct_f6d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -125,7 +129,7 @@ float64 z
         length = len(_x)
       buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
-      buff.write(_get_struct_6d().pack(_x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z))
+      buff.write(_get_struct_f6d().pack(_x.prob, _x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -152,8 +156,8 @@ float64 z
         self.name = str[start:end]
       _x = self
       start = end
-      end += 48
-      (_x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z,) = _get_struct_6d().unpack(str[start:end])
+      end += 52
+      (_x.prob, _x.topleft.x, _x.topleft.y, _x.topleft.z, _x.bottomright.x, _x.bottomright.y, _x.bottomright.z,) = _get_struct_f6d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -162,9 +166,9 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_6d = None
-def _get_struct_6d():
-    global _struct_6d
-    if _struct_6d is None:
-        _struct_6d = struct.Struct("<6d")
-    return _struct_6d
+_struct_f6d = None
+def _get_struct_f6d():
+    global _struct_f6d
+    if _struct_f6d is None:
+        _struct_f6d = struct.Struct("<f6d")
+    return _struct_f6d

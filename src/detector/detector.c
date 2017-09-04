@@ -11,7 +11,7 @@
 image load_stream_cv();                 //load from a camera
 void display_image_cv(image display);   //display frame
 void setup_cam();
-void label_func(int tl_x, int tl_y, int br_x, int br_y, char *names);  //bounding box labelling for c++
+void label_func(int tl_x, int tl_y, int br_x, int br_y, char *names, float prob);  //bounding box labelling for c++
 // <<<<<<<<<<<<<< extern functions from c++ <<<<<<<<<<<<<<
 
 
@@ -48,7 +48,7 @@ void draw_bounding_box(int im_w, int im_h, int num, float thresh, box *boxes, fl
             int temp_br_x = (b.x+b.w/2.)*im_w;
             int temp_br_y = (b.y+b.h/2.)*im_h;
 
-            label_func(temp_tl_x, temp_tl_y, temp_br_x, temp_br_y, names[class]);     //pass it to c++ function for labelling
+            label_func(temp_tl_x, temp_tl_y, temp_br_x, temp_br_y, names[class],prob);     //pass it to c++ function for labelling
 
         }
 
@@ -70,7 +70,7 @@ void setup_proceedure(char *datacfg, char *cfg, char *weights, char *name_list, 
  set_batch_network(&net, 1);
 
  input= buff;
- nms=.4;    //non max supression
+ nms=.8;    //non max supression
  thresh = thresh_desired;
  srand(2222222);
 }

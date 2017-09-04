@@ -16,7 +16,7 @@ link_directories(${CUDA_LIBRARY_DIRS})
 
 rosbuild_genmsg()
 
-add_definitions(-DGPU -DCUDNN -DSUBIMAGES)
+add_definitions(-DGPU -DCUDNN)
 
 # Compile Darknet link Library:
 file(GLOB SOURCES "src/detector/*.c" "src/detector/*.cu" "src/detector/*.h")

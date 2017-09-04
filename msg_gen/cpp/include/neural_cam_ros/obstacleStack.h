@@ -73,12 +73,12 @@ template<class ContainerAllocator>
 struct MD5Sum< ::neural_cam_ros::obstacleStack_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "78f69d2c2bc1534a704126e4efe4e06e";
+    return "4e22f0b6eef92b7f95e181433e52bbcc";
   }
 
   static const char* value(const  ::neural_cam_ros::obstacleStack_<ContainerAllocator> &) { return value(); } 
-  static const uint64_t static_value1 = 0x78f69d2c2bc1534aULL;
-  static const uint64_t static_value2 = 0x704126e4efe4e06eULL;
+  static const uint64_t static_value1 = 0x4e22f0b6eef92b7fULL;
+  static const uint64_t static_value2 = 0x95e181433e52bbccULL;
 };
 
 template<class ContainerAllocator>
@@ -105,6 +105,7 @@ MSG: neural_cam_ros/obstacle\n\
 #info: planar_ is plane position information\n\
 \n\
 string name\n\
+float32 prob\n\
 geometry_msgs/Point topleft\n\
 geometry_msgs/Point bottomright\n\
 \n\

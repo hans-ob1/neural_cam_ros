@@ -25,6 +25,7 @@ struct obstacle_ {
 
   obstacle_()
   : name()
+  , prob(0.0)
   , topleft()
   , bottomright()
   {
@@ -32,6 +33,7 @@ struct obstacle_ {
 
   obstacle_(const ContainerAllocator& _alloc)
   : name(_alloc)
+  , prob(0.0)
   , topleft(_alloc)
   , bottomright(_alloc)
   {
@@ -39,6 +41,9 @@ struct obstacle_ {
 
   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _name_type;
   std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  name;
+
+  typedef float _prob_type;
+  float prob;
 
   typedef  ::geometry_msgs::Point_<ContainerAllocator>  _topleft_type;
    ::geometry_msgs::Point_<ContainerAllocator>  topleft;
@@ -74,12 +79,12 @@ template<class ContainerAllocator>
 struct MD5Sum< ::neural_cam_ros::obstacle_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "86dcd3c1df638bca4619c021d8bfc938";
+    return "2ed324cc68b63371ced6bc19d77946d2";
   }
 
   static const char* value(const  ::neural_cam_ros::obstacle_<ContainerAllocator> &) { return value(); } 
-  static const uint64_t static_value1 = 0x86dcd3c1df638bcaULL;
-  static const uint64_t static_value2 = 0x4619c021d8bfc938ULL;
+  static const uint64_t static_value1 = 0x2ed324cc68b63371ULL;
+  static const uint64_t static_value2 = 0xced6bc19d77946d2ULL;
 };
 
 template<class ContainerAllocator>
@@ -100,6 +105,7 @@ struct Definition< ::neural_cam_ros::obstacle_<ContainerAllocator> > {
 #info: planar_ is plane position information\n\
 \n\
 string name\n\
+float32 prob\n\
 geometry_msgs/Point topleft\n\
 geometry_msgs/Point bottomright\n\
 \n\
@@ -132,6 +138,7 @@ template<class ContainerAllocator> struct Serializer< ::neural_cam_ros::obstacle
   template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
   {
     stream.next(m.name);
+    stream.next(m.prob);
     stream.next(m.topleft);
     stream.next(m.bottomright);
   }
@@ -153,6 +160,8 @@ struct Printer< ::neural_cam_ros::obstacle_<ContainerAllocator> >
   {
     s << indent << "name: ";
     Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.name);
+    s << indent << "prob: ";
+    Printer<float>::stream(s, indent + "  ", v.prob);
     s << indent << "topleft: ";
 s << std::endl;
     Printer< ::geometry_msgs::Point_<ContainerAllocator> >::stream(s, indent + "  ", v.topleft);

@@ -9,7 +9,7 @@ import neural_cam_ros.msg
 import geometry_msgs.msg
 
 class obstacleStack(genpy.Message):
-  _md5sum = "78f69d2c2bc1534a704126e4efe4e06e"
+  _md5sum = "4e22f0b6eef92b7f95e181433e52bbcc"
   _type = "neural_cam_ros/obstacleStack"
   _has_header = False #flag to mark the presence of a Header object
   _full_text = """string stack_name
@@ -22,6 +22,7 @@ MSG: neural_cam_ros/obstacle
 #info: planar_ is plane position information
 
 string name
+float32 prob
 geometry_msgs/Point topleft
 geometry_msgs/Point bottomright
 
@@ -94,6 +95,7 @@ float64 z
           _x = _x.encode('utf-8')
           length = len(_x)
         buff.write(struct.pack('<I%ss'%length, length, _x))
+        buff.write(_get_struct_f().pack(val1.prob))
         _v1 = val1.topleft
         _x = _v1
         buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
@@ -139,6 +141,9 @@ float64 z
           val1.name = str[start:end].decode('utf-8')
         else:
           val1.name = str[start:end]
+        start = end
+        end += 4
+        (val1.prob,) = _get_struct_f().unpack(str[start:end])
         _v3 = val1.topleft
         _x = _v3
         start = end
@@ -178,6 +183,7 @@ float64 z
           _x = _x.encode('utf-8')
           length = len(_x)
         buff.write(struct.pack('<I%ss'%length, length, _x))
+        buff.write(_get_struct_f().pack(val1.prob))
         _v5 = val1.topleft
         _x = _v5
         buff.write(_get_struct_3d().pack(_x.x, _x.y, _x.z))
@@ -224,6 +230,9 @@ float64 z
           val1.name = str[start:end].decode('utf-8')
         else:
           val1.name = str[start:end]
+        start = end
+        end += 4
+        (val1.prob,) = _get_struct_f().unpack(str[start:end])
         _v7 = val1.topleft
         _x = _v7
         start = end
@@ -249,3 +258,9 @@ def _get_struct_3d():
     if _struct_3d is None:
         _struct_3d = struct.Struct("<3d")
     return _struct_3d
+_struct_f = None
+def _get_struct_f():
+    global _struct_f
+    if _struct_f is None:
+        _struct_f = struct.Struct("<f")
+    return _struct_f

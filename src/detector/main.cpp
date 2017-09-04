@@ -64,7 +64,7 @@ void convert_frame(IplImage* input){
 */
 
 // draw boxes
-extern "C" void label_func(int tl_x, int tl_y, int br_x, int br_y, char *names){
+extern "C" void label_func(int tl_x, int tl_y, int br_x, int br_y, char *names, float prob){
 
    //TODO: Make this part (detection interests) more tidy, e.g load from cfg files
 
@@ -103,6 +103,7 @@ extern "C" void label_func(int tl_x, int tl_y, int br_x, int br_y, char *names){
      tempstorage.bottomRight = Point(br_x,br_y);
      tempstorage.name = str;
      tempstorage.objectColor = color;
+     tempstorage.prob = prob;
 
      detectedobjects.push_back(tempstorage);  //rmb to destory this
    }
@@ -321,6 +322,8 @@ public:
 
       d_data.bottomright.x = curr_preprocessed[i].bottomRight.x;
       d_data.bottomright.y = curr_preprocessed[i].bottomRight.y;
+      
+      d_data.prob = curr_preprocessed[i].prob;
 
       d_data.name = curr_preprocessed[i].name;
 
@@ -402,6 +405,8 @@ int main(int argc, char* argv[]){
 
     	d_data.bottomright.x = curr_preprocessed[i].bottomRight.x;
     	d_data.bottomright.y = curr_preprocessed[i].bottomRight.y;
+    	
+    	d_data.prob = curr_preprocessed[i].prob;
 
     	d_data.name = curr_preprocessed[i].name;
 
