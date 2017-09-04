@@ -1,7 +1,7 @@
 [![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]()
 [![Codecov](https://img.shields.io/codecov/c/github/codecov/example-python.svg)]()
 # neural_cam_ros
-neural_cam_ros is essentially an ros wrapper of neural-cam. The backend framework used is darknet developed by Joseph Redmon. You can visit his site here: https://pjreddie.com/darknet/yolo/. This module is designed to quickly test the state-of-the-art obstacle detection/tracking for mobile robot platform. No training option is available in this module.
+neural_cam_ros is essentially an ros wrapper of neural-cam. The backend framework used is darknet developed by Joseph Redmon. You can visit his site here: https://pjreddie.com/darknet/yolo/. This module is designed to quickly test the state-of-the-art obstacle detection/tracking for mobile robot platform. The package is built using rosbuild, I havent test it in catkin. No training option is available in this module.
 
 ##### Update
   - basic ros-wrapper for obstacle detection is complete
@@ -35,12 +35,13 @@ neural_cam_ros is essentially an ros wrapper of neural-cam. The backend framewor
 - latest nvidia graphic driver 367.48
 
 ##### Usage Detail
-requires ROS to run rosmake
+requires a connected webcam and ROS installed to run rosmake in a terminal
   ```sh
     $ roscd neural_cam_ros
     $ rosmake
     $ roslaunch neural_cam_ros multicam.launch
  ```
+
 
 ##### Common Error
 for "installation" of the package, add this line to ~/.bashrc and source it:
