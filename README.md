@@ -1,7 +1,15 @@
 [![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]()
 [![Codecov](https://img.shields.io/codecov/c/github/codecov/example-python.svg)]()
 # neural_cam_ros
-neural_cam_ros is essentially an ros wrapper of neural-cam. The backend framework used is darknet developed by Joseph Redmon. You can visit his site here: https://pjreddie.com/darknet/yolo/. This module is designed to quickly test the state-of-the-art obstacle detection/tracking for mobile robot platform. The package is built using rosbuild, I havent test it in catkin. No training option is available in this module.
+neural_cam_ros is essentially an ros wrapper of neural-cam. The backend deep learning framework used is darknet developed by Joseph Redmon. You can visit his site [here](https://pjreddie.com/darknet/yolo/). This module is designed to quickly test the state-of-the-art obstacle detection/tracking for mobile robot platform. 
+
+<p align="center">
+    <img src="https://haixun00.github.io/img/post_2/detect_result.png" width="640px" height="374px">
+</p>
+
+The package is built using rosbuild, I havent test it in catkin but can be easily integrated. No training option is available in this module.
+
+
 
 ##### Update
   - basic ros-wrapper for obstacle detection is complete
@@ -15,7 +23,7 @@ neural_cam_ros is essentially an ros wrapper of neural-cam. The backend framewor
   - open another terminal and type "rostopic echo /obstacle" to see detected objects been published
   - edit/launch multiple cameras using multicam.launch file
   - to get a decent framerate, use a good graphic card. preferably to be GTX 950 above and run the network with cuDNN
-  - i had pre-trained a set of weights to detect road obstacles for my autonomous vehicle project. There are only three classes for the weights i trained (person, bike and vehicle). you can download and try it our yourself from this link: https://drive.google.com/open?id=0Bzdkh7sucheCRGlRYzZhdXNUWms. Do take note that is set of weights is trained with cuDNN v5, be sure to download that from nvidia website. Otherwise, there will be no detections!
+  - i had pre-trained a set of weights to detect road obstacles for my autonomous vehicle project. There are only three classes for the weights i trained (person, bike and vehicle). you can download and try it our yourself from this [link](https://drive.google.com/open?id=0Bzdkh7sucheCRGlRYzZhdXNUWms). Do take note that is set of weights is trained with cuDNN v5, be sure to download that from nvidia website. Otherwise, there will be no detections!
 
 ##### Recommend System Requirement (Tested and Proven)
 - cmake 3.2 above
