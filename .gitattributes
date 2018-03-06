@@ -1,1 +1,2 @@
 src/detector/*.c linguist-vendored
+src/detector/*.h linguist-vendored
