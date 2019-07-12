@@ -4,7 +4,7 @@
 neural_cam_ros is essentially an ros wrapper of neural-cam. The backend deep learning framework used is darknet developed by Joseph Redmon. You can visit his site [here](https://pjreddie.com/darknet/yolo/). This module is designed to quickly test the state-of-the-art obstacle detection/tracking for mobile robot platform. The package is built using rosbuild, I havent test it in catkin but can be easily integrated. No training option is available in this module.
 
 <p align="center">
-    <img src="https://khaixcore.github.io/img/post_2/detect_result.png" width="600px" height="374px">
+    <img src="https://raw.githubusercontent.com/khaixcore/neural_cam_ros/master/screenshot/screenshot_0.png" width="600px" height="374px">
 </p>
 
 ##### Update
